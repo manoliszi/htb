@@ -38,7 +38,7 @@
               :label="'Apply'"
               variant="elevated"
               color="primary"
-              @click="getCoinHistory"
+              @click=""
             />
           </v-col>
         </v-container>
@@ -48,13 +48,11 @@
 </template>
 
 <script setup>
-import { useMainStore } from '../stores/index'
-import {ref, computed} from 'vue';
+import {ref} from 'vue';
 import UserProfile from '@/components/UserProfile.vue';
 import DatePicker from '@/components/DatePicker.vue';
 import AppButton from "@/components/AppButton.vue";
 
-const store = useMainStore()
 const yesterday = new Date();
 yesterday.setDate(yesterday.getDate() - 1);
 const dateFrom = ref(yesterday.getTime())
@@ -62,31 +60,4 @@ const dateTo = ref(yesterday.getTime())
 const snackbar = ref(false);
 const snackbarMessage = ref('');
 
-const chartData = computed(() => store.getChartData);
-
-function calculateDateDifference(startDate, endDate) {
-  if (isNaN(startDate) || isNaN(endDate)) {
-    throw new Error("One or both of the dates are invalid.");
-  }
-
-  const timeDifference = endDate - startDate;
-  const daysDifference = timeDifference / (1000 * 3600 * 24);
-  return Math.abs(daysDifference) + 1;
-}
-
-async function getCoinHistory() {
-  const startDate = new Date(dateFrom.value);
-  const endDate = new Date(dateTo.value);
-  if (endDate < startDate) {
-    snackbar.value = true
-    snackbarMessage.value = 'Make sure the date from is before date to and try again'
-    return;
-  }
-  const numberOfDays = calculateDateDifference(startDate, endDate)
-  const resp = await store.getBitcoinHistory(numberOfDays)
-  if (!resp.ok) {
-    snackbar.value = true
-    snackbarMessage.value = 'There was an error while trying to fetch the bitcoin data. Please try again later'
-  }
-}
 </script>

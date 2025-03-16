@@ -23,38 +23,15 @@ function createFakeUser(customData = {}) {
 export const useMainStore = defineStore('main', {
   state: () => {
     return {
-      user: createFakeUser(),
-      chartData: {
-        prices: [],
-        dates: []
-      },
+      user: createFakeUser()
     }
   },
   actions: {
     updateUserData(customData) {
       this.user = createFakeUser(customData);
-    },
-    async getBitcoinHistory(numberOfDays) {
-      const url = `https://data-api.cryptocompare.com/index/cc/v1/historical/days?market=cadli&instrument=BTC-USD&limit=${numberOfDays}&aggregate=1&fill=true&apply_mapping=true&response_format=JSON&cache_bust_ts=1741437900&to_ts=1741437960`;
-
-      try {
-        const response = await api.get(url);
-        const prices = response.data.Data.map(item => item.CLOSE);
-        const dates = response.data.Data.map(item => {
-          const date = new Date(item.TIMESTAMP * 1000);
-          return date.toISOString().split('T')[0];
-        });
-        this.chartData.prices = prices;
-        this.chartData.dates = dates;
-        return {ok: true}
-      } catch (error) {
-        console.error("Error fetching Bitcoin data:", error);
-        return {ok: false}
-      }
     }
   },
   getters: {
-    getUser(state) {return state.user},
-    getChartData(state) {return state.chartData},
+    getUser(state) {return state.user}
   }
 })
