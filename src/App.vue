@@ -1,11 +1,9 @@
 <template>
   <v-app>
-    <v-main class="ma-5">
-      <router-view />
-    </v-main>
+    <DefaultLayout />
   </v-app>
 </template>
 
 <script setup>
-  //
+  import DefaultLayout from "@/layouts/default.vue";
 </script>
